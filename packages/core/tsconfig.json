@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Node types are for test/ only; src/ must stay platform-neutral, which
+    // tsconfig.build.json (types: []) enforces at build time.
+    "types": ["node"]
+  },
+  "include": ["src", "test"]
+}

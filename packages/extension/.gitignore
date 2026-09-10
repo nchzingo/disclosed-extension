@@ -1,0 +1,5 @@
+# WXT build output and generated types. Both are derived from src/ and the
+# rules bundle; nothing in either is authored here.
+.output/
+.wxt/
+stats.html

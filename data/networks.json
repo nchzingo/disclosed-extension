@@ -1,0 +1,771 @@
+{
+  "$schema": "./schema/networks.schema.json",
+  "version": "0.2.0-seed",
+  "generated_at": "2026-07-12",
+  "WARNING": "SEED DATA. Every signature is UNVERIFIED and was produced from model recall. Per CLAUDE.md, no signature is promoted to tier `confirmed` until validated against >= 3 real observed URLs. Set `verified: true` and populate `verified_samples` only after validation. Assume this file contains errors.",
+  "CHANGELOG": {
+    "0.2.0": "Removed all bare corporate domains (impact.com, partnerize.com, viglink.com, skimresources.com, flexoffers.com, commission-junction.com, narrativ.com, linksynergy.com) — each was a live false-positive generator. Made path constraints REQUIRED (path_required: true) on hosts that are both corporate and tracking (shareasale.com, avantlink.com, awin1.com). Moved amzn.to to requires_resolution: an Amazon short link is not necessarily an affiliate link and must be resolved before classification."
+  },
+  "networks": [
+    {
+      "id": "amazon_associates",
+      "name": "Amazon Associates",
+      "verified": true,
+      "verified_samples": [
+        "https://www.amazon.com/dp/B09QLDYNTG?tag=soundprrofti-20&linkCode=osi&th=1&psc=1",
+        "https://www.amazon.com/dp/B0D1FLHMD4?tag=robovacguid04-20",
+        "https://www.amazon.com/dp/B0G5X4H4PS?tag=vwads3-20"
+      ],
+      "tier_on_match": "confirmed",
+      "host_patterns": [],
+      "requires_resolution": [
+        "amzn.to"
+      ],
+      "resolution_note": "amzn.to is Amazon's official shortener and is used for NON-affiliate links too. It is not evidence by itself. Resolve it, then classify the destination on its `tag` param.",
+      "param_signatures": [
+        {
+          "param": "tag",
+          "on_hosts": [
+            "amazon.com",
+            "amazon.ca",
+            "amazon.co.uk"
+          ],
+          "host_required": true,
+          "note": "The Associates tracking ID. Format: name-20."
+        },
+        {
+          "param": "ascsubtag",
+          "on_hosts": [
+            "amazon.com",
+            "amazon.ca"
+          ],
+          "host_required": true
+        },
+        {
+          "param": "linkCode",
+          "on_hosts": [
+            "amazon.com",
+            "amazon.ca"
+          ],
+          "host_required": true
+        },
+        {
+          "param": "creativeASIN",
+          "on_hosts": [
+            "amazon.com",
+            "amazon.ca"
+          ],
+          "host_required": true
+        }
+      ],
+      "rate_card": "public",
+      "rate_card_note": "Amazon publishes a fixed standard commission income rate schedule by category, separately for .com and .ca. FETCH IT LIVE. Never hardcode. Rates change without notice.",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "verified_basis": "human_signature_confirmation",
+      "verified_at": "2026-09-05T20:18:05.463Z"
+    },
+    {
+      "id": "cj",
+      "name": "CJ Affiliate (Commission Junction)",
+      "verified": true,
+      "verified_samples": [
+        "https://www.anrdoezrs.net/click-101198803-17135927?sid=tomsguide-ca-7021130070702815429&url=https://electronics.sony.com/audio/headphones/truly-wireless-earbuds/p/wfls900n-b?srsltid=AfmBOopa7mETAG748VMKefupwHF66qAoHnX952-tCRkPWPbwf5DrPcoL",
+        "https://www.anrdoezrs.net/links/100009682/type/dlg/sid/__st0906awd__ckm58fnxx0000dxof97cxfdcp__266456________1________/https://www.jbl.com/over-ear-headphones/TOUR-ONE-M3-TX.html",
+        "https://www.kqzyfj.com/click-101698118-15736252?url=https%3A%2F%2Fus.roborock.com%2Fproducts%2Froborock-saros-z70"
+      ],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "anrdoezrs.net",
+        "dpbolvw.net",
+        "jdoqocy.com",
+        "kqzyfj.com",
+        "tkqlhce.com",
+        "cj.dotomi.com"
+      ],
+      "host_pattern_note": "All dedicated tracking domains, no other purpose. `commission-junction.com` REMOVED in v0.2 — corporate domain.",
+      "param_signatures": [
+        {
+          "param": "sid",
+          "host_required": true,
+          "corroboration_only": true
+        },
+        {
+          "param": "pid",
+          "host_required": true,
+          "corroboration_only": true
+        }
+      ],
+      "rate_card": "private",
+      "rate_card_note": "Merchant rates are not public. Do not guess. Emit `monetized - rate not public` and set r_i = null.",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "verified_basis": "agent_signature_confirmation",
+      "verified_by": "agent",
+      "verified_rationale": "sid=tomsguide-ca-7021130070702815429 [declared-affiliate-param, publisher-slug, id-like] embeds the publisher's own name as a site-attribution ID inside a click-101198803-17135927 redirect shared across three unrelated publishers pointing at four unrelated merchants' product pages, the structural signature of paid-referral attribution rather than shortening, analytics, or CDN routing.",
+      "verified_at": "2026-09-08T13:20:37.824Z"
+    },
+    {
+      "id": "impact",
+      "name": "Impact.com",
+      "verified": true,
+      "verified_samples": [
+        "https://dreame.sjv.io/jR11Bb",
+        "https://eufy-us.sjv.io/aNKKDq",
+        "https://goto.walmart.com/c/2639610/565706/9383?veh=aff&sourceid=imp_000011112222333344&u=https%3A%2F%2Fwww.walmart.com%2Fip%2F18860852003"
+      ],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "*.pxf.io",
+        "*.sjv.io",
+        "*.ojrq.net",
+        "*.7eer.net",
+        "*.evyy.net",
+        "*.n5ka.net",
+        "*.o93x.net",
+        "*.a9yw.net",
+        "*.attfm2.net",
+        "*.c9ftyd.net",
+        "*.d67ag4.net",
+        "*.fziv.net",
+        "*.hyyc7q.net",
+        "*.i254217.net",
+        "*.igs4ds.net",
+        "*.kxyi.net",
+        "*.lvuv.net",
+        "*.nzvz.net",
+        "*.otegtm.net",
+        "*.tkjf.net",
+        "*.xkpq.net",
+        "*.xovt.net",
+        "*.xuok.net",
+        "*.xwrk.net"
+      ],
+      "host_pattern_note": "`impact.com` REMOVED in v0.2 — corporate domain. impact.com/about is not an affiliate link.",
+      "known_merchant_subdomains": {
+        "goto.walmart.com": "Walmart",
+        "goto.target.com": "Target",
+        "bestbuy.7tiv.net": "Best Buy",
+        "homedepot.sjv.io": "The Home Depot"
+      },
+      "param_signatures": [
+        {
+          "param": "irclickid",
+          "corroboration_only": true
+        },
+        {
+          "param": "irgwc",
+          "corroboration_only": true
+        }
+      ],
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "verified_basis": "human_signature_confirmation",
+      "verified_at": "2026-09-05T20:18:19.749Z",
+      "host_pattern_promotions": [
+        {
+          "patterns": [
+            "*.n5ka.net",
+            "*.o93x.net"
+          ],
+          "verified_samples": [
+            "https://avocadomattress.n5ka.net/c/1141873/626062/10135?u=https%3A%2F%2Fwww.avocadogreenmattress.com%2Fcollections%2Fmattresses%2Fproducts%2Faffordable-eco-organic-topper%3Fvariant%3D42733711032470&subId2=[st0906awd][cjog4n3xe00706iye4b6o7qp3][260596][][][][1][][][][]",
+            "https://avocadomattress.n5ka.net/c/221109/626062/10135?subId1=tomsguide-ca-7007916957337178352&sharedId=tomsguide-ca&u=https%3A%2F%2Fwww.avocadogreenmattress.com%2Fcollections%2Fbedding%2Fproducts%2Faffordable-organic-cotton-sheets",
+            "https://bestbuyca.o93x.net/c/1989377/898179/10221?subId1=rtings-hp-r-in-stock&prodsku=19320383&u=https%3A%2F%2Fwww.bestbuy.ca%2Fen-ca%2Fproduct%2Fsony-wh-1000xm6-over-ear-noise-cancelling-bluetooth-headphones-black%2F19320383&intsrc=APIG_7094"
+          ],
+          "verified_basis": "agent_signature_confirmation",
+          "verified_by": "agent",
+          "verified_rationale": "The /c/<id>/<id>/<id> path carries sharedId=tomsguide-ca and subId1=tomsguide-ca-... / subId1=rtings-hp-r-in-stock — the publisher's own name embedded as a sub-tracking ID — alongside u= decoding to real merchant product pages (bestbuy.ca, avocadogreenmattress.com), the standard shape of a publisher-attribution affiliate click link.",
+          "verified_at": "2026-09-07T20:10:43.538Z"
+        },
+        {
+          "patterns": [
+            "*.a9yw.net",
+            "*.attfm2.net",
+            "*.c9ftyd.net",
+            "*.d67ag4.net",
+            "*.fziv.net",
+            "*.hyyc7q.net",
+            "*.i254217.net",
+            "*.igs4ds.net",
+            "*.kxyi.net",
+            "*.lvuv.net",
+            "*.nzvz.net",
+            "*.otegtm.net",
+            "*.tkjf.net",
+            "*.xkpq.net",
+            "*.xovt.net",
+            "*.xuok.net",
+            "*.xwrk.net"
+          ],
+          "verified_samples": [
+            "https://gap.igs4ds.net/c/1141873/821950/5553?u=https%3A%2F%2Fwww.gap.com%2Fbrowse%2Fproduct.do%3Fpid%3D568196122%26tid%3Dgpma000010%26vid%3D1%23pdp-page-content&subId2=[st0906dwd][cmt38b08a00000jfdmqdd4vu5][312951][][][][][][][][]",
+            "https://getquip.d67ag4.net/aOLxoQ",
+            "https://plushbeds.nzvz.net/c/221109/605404/9924?subId1=tomsguide-ca-3908714080003431622&sharedId=tomsguide-ca&u=https%3A%2F%2Fwww.plushbeds.com%2Fproducts%2Fnatural-luxury-handmade-wool-comforter%3Fvariant%3D18792065138786"
+          ],
+          "verified_basis": "agent_signature_confirmation",
+          "verified_by": "agent",
+          "verified_rationale": "Across 5 different publishers and 5 different merchant subdomains, the same /c/{id}/{id}/{id}? path shape carries subId1/sharedId params tagged publisher-slug with literal publisher identity ('subId1=tomsguide-ca-...', 'sharedid=cnet', 'subId1=BGR--') while u= wraps the actual merchant product-page destination (e.g. 'u=https://www.plushbeds.com/products/...'), i.e. attribute-the-referrer-then-forward-to-merchant, the defining shape of affiliate tracking infrastructure shared across many advertiser subdomains.",
+          "verified_at": "2026-09-08T13:20:30.158Z"
+        }
+      ],
+      "unverified_host_patterns_rejected_at": "2026-09-08T02:01:33.882Z",
+      "unverified_host_patterns_rejected_by": "agent",
+      "unverified_host_patterns_rejected_rationale": "All observed destinations are \"not resolved — unknown\" and 3 of 4 examples carry \"no identifier-shaped parameter\" — no observed redirect and no payment identifier establishes affiliate attribution, so per \"if the evidence does not establish it, answer no\" the answer is no.",
+      "rejected_host_patterns_note": "SEVENTEEN Impact vanity parent domains, PROPOSED 2026-09-07 (docs/NYMAG-MECHANISM.md §6 P2), SCREENED under docs/LABELING.md §6 the same day, and REJECTED by the rater. They are recorded here and MATCH NOTHING: `parseRuleset` ignores this field, so no link on any of these hosts is classified or badged. Classification over the corpus is byte-identical to the state before they were proposed. WHAT WAS PROPOSED: every one carries the /c/<id>/<id>/<id>?subId1=|subId2=|sharedId=&u=<destination> shape this entry's confirmed hosts already carry, on hosts the table did not hold. MEASURED over the 345-article corpus: 214 links across 17 hosts and 5 publishers — gap.igs4ds.net 97, helix-sleep.tkjf.net 22, dreamcloudsleep.xuok.net 18, leesasleep.lvuv.net 17, tuftandneedle.attfm2.net 13, nectar.xovt.net 9, birch.fziv.net 8, casetify.hyyc7q.net 5, plushbeds.nzvz.net 4, getquip.d67ag4.net 4, imp.i254217.net 3, crocs-us.xkpq.net 3, thefarmersdog.otegtm.net 3, razer.a9yw.net 3, casemate.kxyi.net 3, awarasleep.xwrk.net 1, raymour-and-flanigan.c9ftyd.net 1. The screen showed 116 distinct attributed URLs and 5 examples. (docs/NYMAG-MECHANISM.md §6 P2 counted 15 hosts and 204 links; the corpus grew 282 -> 345 articles between that investigation and this edit, adding casetify.hyyc7q.net and casemate.kxyi.net.) THE PATTERN SHAPE WAS A WILDCARD ON THE PARENT, matching the ratified *.n5ka.net / *.o93x.net precedent — Impact issues one random parent domain per merchant and puts the brand in the subdomain — and that claims a superset of what was observed, which is stated rather than hidden. A RE-SCREEN IS QUEUED AND WAS DELIBERATELY NOT RUN IN THE SAME SESSION: the brief's evidence extractor reads ONLY param names declared in this file's own `param_signatures`, which for `impact` are `irclickid` and `irgwc`. It therefore printed \"host rule only — no identifier-shaped parameter in this URL\" directly beneath URLs carrying `subId1=tomsguide-ca-...`, `sharedId=tomsguide-ca` and `partnerpropertyid=` — the publisher's own name embedded as a sub-tracking id, which is the exact evidence the *.n5ka.net rater cited when it answered yes. The summary line contradicted the URL printed above it, and the rater quoted the summary line. Fixing the extractor and re-screening is correct; doing it in the session that already saw a `no` is not, because the second run could not be blind. It needs a fresh rater and a corrected brief.",
+      "unverified_host_patterns_restored_at": "2026-09-08T13:16:56.550Z",
+      "unverified_host_patterns_restored_reason": "Re-screen queued by docs/LABELING.md §6: the brief's evidence extractor recognised only param NAMES declared in param_signatures and printed 'no identifier-shaped parameter in this URL' beneath URLs carrying subId1=<publisher>-<id>. The extractor is fixed 2026-09-08 to print EVERY param with its value and mark publisher-slug / id-like values, and this screen goes to a rater that has not seen the 2026-09-07 answer."
+    },
+    {
+      "id": "rakuten",
+      "name": "Rakuten Advertising (formerly LinkShare)",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "click.linksynergy.com"
+      ],
+      "host_pattern_note": "Bare `linksynergy.com` REMOVED in v0.2. Only the click subdomain is a tracking host.",
+      "param_signatures": [
+        {
+          "param": "murl",
+          "host_required": true
+        },
+        {
+          "param": "mid",
+          "host_required": true
+        }
+      ],
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ]
+    },
+    {
+      "id": "awin",
+      "name": "Awin",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "awin1.com",
+        "*.awin1.com"
+      ],
+      "path_patterns": [
+        "/cread.php"
+      ],
+      "path_required": true,
+      "param_signatures": [
+        {
+          "param": "awinmid",
+          "host_required": true
+        },
+        {
+          "param": "awinaffid",
+          "host_required": true
+        }
+      ],
+      "rate_card": "partial",
+      "rate_card_note": "Awin publishes some advertiser commission ranges in its public advertiser directory. Scrape what is public; omit the rest.",
+      "markets": [
+        "US",
+        "CA"
+      ]
+    },
+    {
+      "id": "shareasale",
+      "name": "ShareASale (Awin group)",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "shareasale.com",
+        "*.shareasale.com"
+      ],
+      "path_patterns": [
+        "/r.cfm",
+        "/u.cfm",
+        "/m-pr.cfm"
+      ],
+      "path_required": true,
+      "path_required_note": "shareasale.com is BOTH a corporate site and a tracking host. The path constraint is MANDATORY. A host-only match is a false positive.",
+      "param_signatures": [
+        {
+          "param": "afftrack",
+          "host_required": true
+        },
+        {
+          "param": "merchantID",
+          "host_required": true
+        },
+        {
+          "param": "userID",
+          "host_required": true
+        }
+      ],
+      "rate_card": "partial",
+      "rate_card_note": "The public merchant directory lists base commission for many merchants. Scrape it.",
+      "markets": [
+        "US",
+        "CA"
+      ]
+    },
+    {
+      "id": "skimlinks",
+      "name": "Skimlinks",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "go.skimresources.com",
+        "go.redirectingat.com"
+      ],
+      "host_pattern_note": "Bare `skimresources.com` REMOVED in v0.2.",
+      "dom_signature": {
+        "script_src_contains": [
+          "skimresources.com/js/",
+          "skimlinks.js"
+        ],
+        "tier_on_match": "likely",
+        "CRITICAL": "Skimlinks rewrites links CLIENT-SIDE via injected script. Raw HTML on a fully-monetized page looks CLEAN. If the crawler does not render, it will report large publishers as honest when they are not. Detect the script tag; treat all outbound merchant links on that page as `likely` monetized. This is the single most likely cause of systematic false negatives in the corpus."
+      },
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ]
+    },
+    {
+      "id": "sovrn",
+      "name": "Sovrn // Commerce (formerly VigLink)",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "redirect.viglink.com"
+      ],
+      "host_pattern_note": "Bare `viglink.com` REMOVED in v0.2.",
+      "dom_signature": {
+        "script_src_contains": [
+          "viglink.com/api/",
+          "sovrn.com"
+        ],
+        "tier_on_match": "likely",
+        "note": "Same client-side rewrite pattern as Skimlinks. Detect the script."
+      },
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ]
+    },
+    {
+      "id": "partnerize",
+      "name": "Partnerize",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "prf.hn",
+        "*.prf.hn"
+      ],
+      "host_pattern_note": "Bare `partnerize.com` REMOVED in v0.2 — corporate domain. `*.prf.hn` ADDED 2026-09-07 (docs/NYMAG-MECHANISM.md §6 P1). `prf.hn` is already a CLAUDE.md host-pattern class (a) entry — a dedicated redirect host serving no other purpose — and the wildcard is the SAME claim about the SAME host, not a wider one: it says the subdomains of a dedicated click host are that click host. It was needed because hostMatchesPattern() treats a non-wildcard pattern as exact against hostVariants(), which strips only a leading `www.`, so `www.prf.hn` matched and `glacier.prf.hn` did not. MEASURED in this corpus: 79 prf.hn links — www.prf.hn 47 (tomsguide.com), philipsglobal.prf.hn 14 (electricteeth.com), prf.hn 12 (nymag.com), glacier.prf.hn 6 (nymag.com). This entry carries `verified: false`, so every one of them classifies `likely` and NONE reaches `confirmed`; promotion needs a §6 screen that has not been run.",
+      "param_signatures": [
+        {
+          "param": "clickref",
+          "corroboration_only": true
+        }
+      ],
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "host_pattern_added_at": "2026-09-07"
+    },
+    {
+      "id": "pepperjam",
+      "name": "Pepperjam / Ascend",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "pjatr.com",
+        "pjtra.com",
+        "gopjn.com",
+        "pntra.com",
+        "pntrs.com"
+      ],
+      "host_pattern_note": "All dedicated tracking domains.",
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ]
+    },
+    {
+      "id": "avantlink",
+      "name": "AvantLink",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "avantlink.com",
+        "avantlink.ca",
+        "*.avmws.com"
+      ],
+      "path_patterns": [
+        "/click.php"
+      ],
+      "path_required": true,
+      "path_required_note": "avantlink.com and .ca are CORPORATE sites that also host /click.php. The path constraint is MANDATORY. `*.avmws.com` is dedicated and exempt.",
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "note": "Runs a distinct Canadian program (avantlink.ca). Relevant for outdoor / sports / cycling verticals."
+    },
+    {
+      "id": "howl",
+      "name": "Howl (formerly Narrativ)",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "likely",
+      "host_patterns": [
+        "howl.link"
+      ],
+      "host_pattern_note": "Bare `narrativ.com` REMOVED in v0.2 — corporate domain.",
+      "rate_card": "private",
+      "markets": [
+        "US"
+      ],
+      "note": "Used heavily by large media commerce desks. Verify current domains before promoting past `likely`."
+    },
+    {
+      "id": "flexoffers",
+      "name": "FlexOffers",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "flexlinks.com",
+        "track.flexlinkspro.com"
+      ],
+      "host_pattern_note": "Bare `flexoffers.com` REMOVED in v0.2 — corporate domain.",
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ]
+    },
+    {
+      "id": "refersion",
+      "name": "Refersion",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "possible",
+      "host_patterns": [],
+      "param_signatures": [
+        {
+          "param": "rfsn"
+        }
+      ],
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "note": "Shopify ecosystem. ?rfsn= appears on the MERCHANT's own domain, so it is only `possible` until the merchant is independently confirmed to run a Refersion program."
+    },
+    {
+      "id": "generic_direct",
+      "name": "Direct brand programs (uncorroborated)",
+      "verified": false,
+      "verified_samples": [],
+      "tier_on_match": "possible",
+      "host_patterns": [],
+      "param_signatures": [
+        {
+          "param": "ref"
+        },
+        {
+          "param": "aff"
+        },
+        {
+          "param": "affiliate"
+        },
+        {
+          "param": "partner"
+        },
+        {
+          "param": "via"
+        }
+      ],
+      "rate_card": "varies",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "WARNING": "NEVER BADGE THESE. ?ref= is used constantly for non-affiliate tracking, referral programs, and analytics. It is noise, not evidence. Promote to `likely` ONLY when the destination merchant is independently confirmed to run an affiliate program AND the param value matches a known publisher ID pattern. One false positive here destroys the brand."
+    },
+    {
+      "id": "button",
+      "name": "Button",
+      "verified": true,
+      "verified_samples": [
+        "https://r.bttn.io/?btn_ref=org-225e4e0aac880b8f&btn_url=https%3A%2F%2Fwww.amazon.com%2Feufy-Navigation-2-85-Inch-Expansion-Detection%2Fdp%2FB0GD1XTMFN%3Fth%3D1%26tag%3Dstaticmedia-bgr-custom-20&btn_pub_ref=2209949-in_text-2",
+        "https://r.bttn.io/?btn_ref=org-225e4e0aac880b8f&btn_url=https%3A%2F%2Fwww.amazon.in%2FEufy-Auto-Empty-Ultra-Slim-Multi-Infrared-Navigation%2Fdp%2FB0DR8XJ9XZ%3Ftag%3Dstaticmedia-bgr-custom-20&btn_pub_ref=2209949-in_text-2",
+        "https://r.bttn.io/?btn_ref=org-225e4e0aac880b8f&btn_url=https%3A%2F%2Fwww.amazon.in%2Froborock-Q7-M5-Combination-Anti-Tangle%2Fdp%2FB0DSJF7ZDJ%3Ftag%3Dstaticmedia-bgr-custom-20&btn_pub_ref=2209949-in_text-3"
+      ],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "r.bttn.io"
+      ],
+      "host_pattern_note": "Dedicated link-wrapper host. Added by operator ruling 2026-08-05 after 9 observed corpus URLs (BGR) wrapping amazon.com links that carry the publisher's own tag=; serves no non-tracking purpose.",
+      "param_signatures": [
+        {
+          "param": "btn_ref",
+          "corroboration_only": true
+        }
+      ],
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "verified_basis": "human_signature_confirmation",
+      "verified_at": "2026-09-05T20:18:34.638Z"
+    },
+    {
+      "id": "partnerboost",
+      "name": "PartnerBoost",
+      "verified": true,
+      "verified_samples": [
+        "https://app.partnerboost.com/track/0f66gAUO_b2FEl8_b95b6ynD58m4QA_aS5jXF2XiJzgxqFYS8Eh212YJyQTc3ZoEM4l7cQ79CbbsLzRjFgLMPk_c?url=https%3A%2F%2Fwww.amazon.com%2Fdp%2FB0FXG2BDTJ%3Fmaas%3Dmaas_adg_api_585625124253623110_static_12_201%26ref_%3Daa_maas%26tag%3Dmaas%26aa_campaignid%3DPB1cdf710570bb6c7fd45bd7cdd390dc24%26aa_adgroupid%3Dd7bd3SiEVEO8Mhzx6dRj2LyACzgQt1Hf2oIsRvW0hdWJyYd3QNV9Pf0vJegjM35MJSVc40yNhnSkh3ZhmTms_bFCy5z7I7dA_c%26aa_creativeid%3D4648EzJRZ5ISwP4PrtxEHIKrIBaAQL7evxzeC0Rp578R_alC_a",
+        "https://app.partnerboost.com/track/a9778CPmuRuUEu22LygQ2a_aiHCwTx5gB8LUM0NXNXM0nJWIdJ3OT7v_aWIhkKQvSDPYqWt5xR_aCS1xDODkw_c_c?url=https%3A%2F%2Fwww.amazon.com%2Fdp%2FB0G5X4H4PS%3Fmaas%3Dmaas_adg_api_586321083774220533_static_12_201%26ref_%3Daa_maas%26tag%3Dmaas%26aa_campaignid%3DPB1bf2c5344fc45811b0a22dbebe39d1b5%26aa_adgroupid%3D8609tMRmCwP0SrVLz2o2xBKZSAgez21M0cgFj6wYSfCV0cwz00tFwGheLV9guKbgsvEjysjFvbPfILCoQVSZAbfALRLZAw_c_c%26aa_creativeid%3D21afs_bzbQkUSDuCas4NG4iF9n_aJxRghxqtBRAwIC24y0EQkO",
+        "https://app.partnerboost.com/track/b40cfU_abq_aqBOGDLJ9cG1zPXP_a9BX2jIDso6EsKT7Ek_aKxOSUvKVEmjwRUNZhX0hkTbnqlvALx8_bZiSJVA_c_c?url=https%3A%2F%2Fwww.amazon.com%2Fdp%2FB0F3J6FR1H%3Fmaas%3Dmaas_adg_api_586321083774220533_static_12_201%26ref_%3Daa_maas%26tag%3Dmaas%26aa_campaignid%3DPB1bf2c5344fc45811b0a22dbebe39d1b5%26aa_adgroupid%3Dee54std8BIApkxFuRbJtBxxZ0_bgjlPbbOiPL7QsnE2pis6wuVFHacJUpXl6WfNd9wFKaZzHWgcbbISsRbn_bMYxTOyMCFxQ_c_c%26aa_creativeid%3D0f68Qzt9uVr_a_bV5JIFLyNaBUOfRJdVHEu1CIUOrrG8Aa7A1X"
+      ],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "app.partnerboost.com"
+      ],
+      "host_pattern_note": "Tracking endpoint app.partnerboost.com/track/... Added by operator ruling 2026-08-05 after 9 observed corpus URLs wrapping tagged amazon.com links. Path-bearing app. subdomain only — bare partnerboost.com is a corporate domain and stays out.",
+      "param_signatures": [],
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "verified_basis": "agent_signature_confirmation",
+      "verified_by": "agent",
+      "verified_rationale": "All examples route through a /track/ path to a wrapped Amazon destination containing the Amazon Associates affiliate parameter 'tag=maas', tagged declared-affiliate-param, showing this host exists to carry a commission-tracking identifier to the merchant.",
+      "verified_at": "2026-09-08T13:20:38.578Z"
+    },
+    {
+      "id": "georiot",
+      "name": "GeoRiot / Geniuslink",
+      "verified": true,
+      "verified_samples": [
+        "https://target.georiot.com/Proxy.ashx?tsid=45724&GR_URL=https%3A%2F%2Famazon.com%2FUtopia-Bedding-4-Piece-Queen-Sheets%2Fdp%2FB00NX0XK1K%2Fref%3Dsr_1_1_sspa%3Ftag%3Dftr-tomsguide-us-20%26ascsubtag%3Dtomsguide-ca-7513718857391134525-20",
+        "https://target.georiot.com/Proxy.ashx?tsid=45724&GR_URL=https%3A%2F%2Famazon.com%2FUtopia-Bedding-Comforter-Duvet-Insert%2Fdp%2FB084WWSJXC%2Fref%3Dsr_1_1_sspa%3Fth%3D1%26tag%3Dftr-tomsguide-us-20%26ascsubtag%3Dtomsguide-ca-7513718857391134525-20",
+        "https://target.georiot.com/Proxy.ashx?tsid=8428&GR_URL=https%3A%2F%2Fwww.amazon.ca%2Freviews%2FB00Q7EUZLC%3Ftag%3Dhawk-future-ca-20%26ascsubtag%3Dtomsguide-ca-6903818456372305947-20"
+      ],
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "target.georiot.com",
+        "buy.geni.us"
+      ],
+      "host_pattern_note": "Dedicated geo-targeting redirect host; /Proxy.ashx is its only observed path and it serves no non-tracking purpose, so it qualifies under CLAUDE.md host_pattern rule (a). Added by operator ruling 2026-09-07 on OBSERVED RESOLUTION EVIDENCE, not recall: 10 URLs sampled from the 180 distinct target.georiot.com URLs in the corpus were resolved server-side and cookieless (HEAD, honest UA, robots.txt re-checked per hop; target.georiot.com/robots.txt is 'User-agent: * / Disallow:', i.e. everything allowed). 9 of 10 returned HTTP 302 in one hop; 1 returned 429 and was recorded 'blocked'. EVERY ONE of the 9 observed destinations carried an Amazon Associates tag= plus ascsubtag=, e.g. tag=ftr-tomsguide-ca-20&ascsubtag=tomsguide-ca-7513718857391134525-20. The redirect therefore carries affiliate attribution; it does not merely pass a URL through. verified:false until a human confirms the signature via label.js --confirm-signature, so classify() caps it at `likely` (CLAUDE.md tier table) and emits unverified_signature evidence.",
+      "param_signatures": [
+        {
+          "param": "tsid",
+          "corroboration_only": true
+        },
+        {
+          "param": "GR_URL",
+          "corroboration_only": true
+        }
+      ],
+      "merchant_in_param": "GR_URL",
+      "merchant_note": "WRAPPER, not a merchant (docs/EXTRACTION.md §4): the network id is georiot and the merchant lives in GR_URL. Rate lookup is by the decoded merchant, never by the network. The DECLARED GR_URL destination outranks our own observed destination, because GeoRiot geo-targets: a page declaring amazon.com with tag=ftr-tomsguide-us-20 redirected our Canadian egress to www.amazon.ca with tag=ftr-tomsguide-ca-20. amazon.com and amazon.ca are different rate cards, so preferring our observation would price a US publisher's link against the Canadian schedule because of where we fetch from. See rateHostFor().",
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "verified_basis": "agent_signature_confirmation",
+      "verified_by": "agent",
+      "verified_rationale": "observed destination shows the proxy substituting the Amazon affiliate `tag=` (e.g. `tag=ftr-tomsguide-us-20` in GR_URL becomes `tag=ftr-tomsguide-ca-20` in the redirect) while preserving `ascsubtag`, i.e. it actively manages commission-tagged Amazon links by geography, not merely shortening or routing them.",
+      "verified_at": "2026-09-07T19:06:25.585Z",
+      "unverified_host_patterns_note": "QUEUED 2026-09-08, ADDED 2026-09-08b. `buy.geni.us` carries 88 links on electricteeth.com. Its path and parameters are IDENTICAL to this entry's confirmed target.georiot.com: /Proxy.ashx?TSID=<id>&GR_URL=<amazon url>, with the publisher's own Amazon Associates tag inside the GR_URL (tag=electeet00-20). geniuslink.com — the corporate site for the geni.us shortener — carries the footer '(c) 2026 by GeoRiot Networks, Inc.', fetched 2026-09-08 with the honest UA under a robots.txt allowing it. That establishes the same OPERATOR; it does not by itself establish that this host is an affiliate tracking host, which is what the screen asks. An entry verified against target.georiot.com has said nothing about buy.geni.us, so it goes in unverified_host_patterns and is capped at `likely` until a rater that has seen no prior answer says otherwise. buy.geni.us/robots.txt is 'User-agent: * / Disallow:' — everything allowed — checked 2026-09-08T17:21:01Z; no URL was followed to build this.",
+      "host_pattern_promotions": [
+        {
+          "patterns": [
+            "buy.geni.us"
+          ],
+          "verified_samples": [
+            "https://buy.geni.us/Proxy.ashx?TSID=56683&GR_URL=https%3A%2F%2Fwww.amazon.com%2Fdp%2FB0FLR3YRFL%3Ftag%3Delecteet00-20%26linkCode%3Dogi%26th%3D1%26psc%3D1",
+            "https://buy.geni.us/Proxy.ashx?TSID=56684&GR_URL=https%3A%2F%2Fwww.amazon.com%2Fdp%2FB004W6PAJE%3Ftag%3Delecteet00-20%26linkCode%3Dogi%26th%3D1%26psc%3D1",
+            "https://buy.geni.us/Proxy.ashx?TSID=56703&GR_URL=https%3A%2F%2Fwww.amazon.com%2Fdp%2FB07C5MSQ3R%3Ftag%3Delecteet00-20%26linkCode%3Dogi%26th%3D1%26psc%3D1"
+          ],
+          "verified_basis": "agent_signature_confirmation",
+          "verified_by": "agent",
+          "verified_rationale": "GR_URL decodes to an Amazon URL carrying \"tag=electeet00-20&linkCode=ogi\" — a real Amazon Associates affiliate tag matching the publisher electricteeth.com's own name, present in the corpus's own recorded query strings, not a company claim.",
+          "verified_at": "2026-09-08T17:26:58.076Z"
+        }
+      ]
+    },
+    {
+      "id": "nucleuslinks",
+      "name": "NucleusLinks (Affinity Global Inc.)",
+      "verified": true,
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "ncls1.com",
+        "*.ncls1.com"
+      ],
+      "host_pattern_note": "QUEUED 2026-09-07 by CLAUDE.md, ADDED 2026-09-08b as an UNVERIFIED entry so a §6 screen can be run on it. 1,030 corpus links, all on nymag.com, all on the single path /irk. CLAUDE.md host_pattern class (a): ncls1.com is not a corporate domain — nucleuslinks.ai is — and ncls1.com/robots.txt is an explicit blanket 'User-agent: * / Disallow: /', re-checked 2026-09-08T17:20:52Z, as is widgetsapi.ncls1.com/robots.txt. WE HAVE NEVER OBSERVED THE HOP and are not permitted to: no destination was resolved, no signature was written from a resolution, and none of the 1,030 links has ever been followed. The screen was given the URL evidence plus quotes from the operator's own pages, cited with provenance and no gloss (data/corpus/cited-sources-2026-09-08b.json). verified:false, so classify() caps it at `likely` and emits unverified_signature evidence.",
+      "param_signatures": [
+        {
+          "param": "subid",
+          "corroboration_only": true
+        },
+        {
+          "param": "enk",
+          "corroboration_only": true
+        }
+      ],
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "verified_samples": [
+        "https://ncls1.com/irk?enk=bz1xbGpsMDAmcz0xMzEwMDMmYj00MTk2NiZia2Q9Y293YXltZWdhLmNvbQ==&subid=nymag.com&typl=2&lpos=97&ppid=&atid=465d9bd6013b47fa46b9a449389a5cc0&atnm=michael%20zhao&srid=&srnm=direct&arid=d94c8e9d05f93521b2360fb5f2fff5ba&impid=2482abe6d1d66d3d01586108973b5668&acid=c060db819775574355e32e0a449f25e1&catnm=tech%20gadgets&aurl=nymag.com%2Fstrategist%2Farticle%2Fbest-air-purifier.html&di=__st0906awd__cj8afg4490063oqyenijiszld__242671________1________&d=https%3A%2F%2Fcowaymega.com%2Fproducts%2Fmighty-ap-1512hh",
+        "https://ncls1.com/irk?enk=bz1xbGpsMDAmcz0xMzEwMDMmYj0xNTQ2OSZia2Q9YmVzdGJ1eS5jb20=&subid=nymag.com&typl=2&lpos=94&ppid=&atid=c6ef10278732ae5f7db83df93b7d339d&atnm=jordan%20mcmahon&srid=&srnm=direct&arid=ebdf033bf5a59fc660eabc5e54a95a35&impid=a58615d834fee821f7c6990d9e2a06c9&acid=c060db819775574355e32e0a449f25e1&catnm=tech%20gadgets&aurl=nymag.com%2Fstrategist%2Farticle%2Fbest-noise-canceling-headphones.html&di=[st0906awd][ckm58fnxx0000dxof97cxfdcp][281645][][][][1][][][][]&d=https%3A%2F%2Fwww.bestbuy.com%2Fproduct%2Fsony-wh-1000xm6-best-wireless-noise-canceling-headphones-black%2FJ7XSRH5RCF%2Fsku%2F6620467",
+        "https://ncls1.com/irk?enk=bz1xbGpsMDAmcz0xMzEwMDMmYj0zOTUwNiZia2Q9YW1lcmlzbGVlcC5jb20=&subid=nymag.com&typl=1&lpos=91&ppid=&atid=d9c2fb015d0aed809ea4591da795b20e&atnm=katherine%20gillespie&srid=&srnm=direct&arid=442a94b5ce8785b620d5685f17057dc3&impid=e7053e1a91fbf75f3bc53e0e78b79c2f&acid=84378766d8c1340382f985186a2b79b7&catnm=outdoors&aurl=nymag.com%2Fstrategist%2Farticle%2Fbest-camping-mattresses-and-backpacking-pads.html&di=&d=https%3A%2F%2Famerisleep.com%2F"
+      ],
+      "verified_basis": "agent_signature_confirmation",
+      "verified_by": "agent",
+      "verified_rationale": "NucleusLinks' own pages describe generating 'affiliate links' for publishers and 'receiving payouts from networks' via networks like CJ/Impact/Awin, and every example URL carries subid=nymag.com tagged declared-affiliate-param+publisher-slug alongside enk (also declared-affiliate-param) whose decoded value includes bkd=amerisleep.com matching the d= destination — a publisher-to-merchant payout-attribution structure, not a shortener, CDN hop, or non-affiliate analytics service.",
+      "verified_at": "2026-09-08T17:26:51.542Z"
+    },
+    {
+      "id": "merchant_affiliate_endpoint",
+      "name": "Merchant-operated affiliate endpoint",
+      "verified": true,
+      "tier_on_match": "confirmed",
+      "host_patterns": [
+        "go.nordvpn.net",
+        "get.surfshark.net",
+        "go.getproton.me",
+        "affiliate.ipvanish.com",
+        "go.expressvpn.com"
+      ],
+      "path_required": true,
+      "path_patterns": [
+        "/aff_c",
+        "/aff_ad",
+        "/c/"
+      ],
+      "host_pattern_note": "CANDIDATE, verified:false, capped at `likely` until a docs/LABELING.md §6 screen answers. Five dedicated subdomains, each operated by the merchant whose product the link sells, each observed serving ONLY a tracking path. Qualifies under CLAUDE.md host_pattern rule (b): host PLUS a required path, never a bare corporate domain — `nordvpn.com` is not here and must never be. ADDED ON OBSERVED RESOLUTION EVIDENCE, not recall. On 2026-09-08 the server-side resolver (HEAD, honest UA, cookieless, robots.txt re-checked per hop, destination never requested) resolved 60 of 60 distinct www.top10vpn.com/goto/ URLs and 19 of 19 distinct cyberinsider.com/go/ URLs. 54 of those 79 destinations landed on one of these five hosts. THE STRUCTURAL EVIDENCE IS A PER-PUBLISHER IDENTIFIER THAT DIFFERS BETWEEN THE TWO PUBLISHERS AND IS CONSTANT WITHIN EACH: go.nordvpn.net/aff_c carries aff_id=624 from top10vpn.com and aff_id=2523 from cyberinsider.com; get.surfshark.net aff_id=1372 vs 2179; go.getproton.me aff_id=1118 vs 1454; affiliate.ipvanish.com aff_id=1024 vs 2230; go.expressvpn.com /c/310344/… vs /c/4133660/…. That is an identifier the merchant assigns per publisher, which is what an affiliate program attributes a referral by. WHAT THIS IS NOT: it is not a claim about which affiliate PLATFORM each merchant runs, and no vendor is named anywhere in this entry. It is not a rate — every rate still comes from data/rates/* with its own source_url and fetched_at.",
+      "param_signatures": [
+        {
+          "param": "aff_id",
+          "corroboration_only": true
+        },
+        {
+          "param": "offer_id",
+          "corroboration_only": true
+        },
+        {
+          "param": "url_id",
+          "corroboration_only": true
+        }
+      ],
+      "rate_card": "private",
+      "markets": [
+        "US",
+        "CA"
+      ],
+      "verified_samples": [
+        "https://cyberinsider.com/go/nordvpn",
+        "https://www.top10vpn.com/goto/?lang=en&&type=ed&pg=android&name=expressvpn&clicktype=ClickOut&pagetype=Roundup&linktype=text&ga_category=RoundupPageOut&ga_action=expressvpn&ga_label=Contextual",
+        "https://www.top10vpn.com/goto/?lang=en&&type=prc&name=expressvpn&ref=6172e4faadbaf&clicktype=ClickOut&pagetype=Roundup&linktype=text&ga_category=RoundupPageOut&ga_action=expressvpn&ga_label=Contextual"
+      ],
+      "verified_basis": "agent_signature_confirmation",
+      "verified_by": "agent",
+      "verified_rationale": "observed destination \"https://go.nordvpn.net/aff_c?offer_id=513&aff_id=2523&url_id=9458&aff_sub=main\" carries an affiliate-click path (aff_c) with an affiliate id and affiliate sub-id (aff_id, aff_sub) alongside offer_id — a payment identifier in the actual redirect target, not a name or plausibility guess.",
+      "verified_at": "2026-09-08T20:07:30.076Z"
+    }
+  ],
+  "cloak_path_hints": {
+    "note": "Publishers commonly cloak links behind their own domain. These paths are HINTS that a link needs server-side resolution. They are NOT evidence of monetization by themselves. Resolve, then classify by destination. A cloaked link that cannot be resolved is recorded as `monetization unknown - cloaked, unresolvable`, which is itself a publishable finding.",
+    "patterns": [
+      "/go/",
+      "/out/",
+      "/link/",
+      "/recommends/",
+      "/r/",
+      "/deal/",
+      "/shop/",
+      "/buy/",
+      "/get/",
+      "/ref/",
+      "/redirect/",
+      "/away/"
+    ]
+  },
+  "resolver_scope": {
+    "note": "Hosts the server-side resolver (packages/crawler/src/resolve.ts) is permitted to RESOLVE. THIS IS NOT A SIGNATURE LIST AND NOTHING IS BADGED BY BEING HERE. It answers one question only - 'may we spend one HEAD request learning where this host points' - and it exists because the alternative was to invent an affiliate signature for a host we had no evidence about yet, purely to get it into resolver scope. That is backwards: CLAUDE.md forbids a bare corporate domain as a signature, and a host must be resolvable BEFORE we can gather the evidence that would justify one. Same standing as cloak_path_hints, which is likewise a hint about where resolution is needed and never evidence of monetization.",
+    "conduct": "Resolution is server-side, cookieless, honest UA, HEAD first, robots.txt re-checked before every hop including hop 0, at most 5 hops, rate-limited per host, one resolution per distinct URL cached forever, and THE DESTINATION IS NEVER REQUESTED - it is read from the last Location header. HARD RULE 1 stands: nothing here rewrites, redirects or fires a link on behalf of a user.",
+    "hosts": [
+      "cc.cnet.com",
+      "target.georiot.com",
+      "ncls1.com"
+    ],
+    "host_notes": {
+      "cc.cnet.com": "727 links in the corpus, all cnet.com. Dedicated redirect host on a publisher subdomain (/v1/otc/<id>?merchant=<id>&url=<destination>). Added to resolver scope 2026-09-07. SAMPLED AND NOT OBSERVED: 10 of the 295 distinct URLs were attempted 2026-09-07 and all 10 recorded robots_disallowed with error 'robots.txt unreachable' - https://cc.cnet.com/robots.txt answers 403 behind a Cloudflare managed challenge, and our conduct rule treats an unreachable robots.txt as disallowed. NO destination was observed, so NO signature is written for this host and nothing about it is badged. 'We were not permitted to look' is a different statement from 'the redirect adds no affiliate attribution', and the two must never be reported as one.",
+      "target.georiot.com": "505 links in the corpus, all tomsguide.com; 180 distinct URLs. GeoRiot/Geniuslink geo-targeting redirector (/Proxy.ashx?tsid=<id>&GR_URL=<destination>). Added to resolver scope 2026-09-07 and sampled the same day: 10 attempted, 9 resolved in one 302 hop, 1 blocked (HTTP 429). All 9 destinations carried an Amazon Associates tag=. Promoted to a networks entry (id: georiot, verified:false) on that evidence; the entry, not this list, is what badges.",
+      "ncls1.com": "1030 links in the corpus, all nymag.com, 1030 distinct URLs. Path /irk with an opaque base64-ish enk= plus subid=nymag.com and a final d= destination. Added to resolver scope 2026-09-07 after it appeared as 2 of the 12 false negatives of that date, where the agent rater could not name the network either (\"some third-party commerce-tracking redirect service, cannot tell which\"). IN SCOPE IS NOT A SIGNATURE: this buys one HEAD request per distinct URL to learn where the host points, and NOTHING is badged by being here. SAMPLED AND NOT OBSERVED: 10 of the 1030 distinct URLs were attempted 2026-09-07 and all 10 recorded robots_disallowed. https://ncls1.com/robots.txt answers HTTP 200 with exactly \"User-agent: *\" / \"Disallow: /\" - a blanket refusal of the whole host, so no HEAD was issued and NO destination was observed. This is a DIFFERENT finding from cc.cnet.com, whose robots.txt is unreachable behind a challenge and which our conduct rule treats as disallowed; here the operator has published an explicit refusal and we are honouring it. NO signature is written for this host and nothing about it is badged. Its 1030 links stay `none`, its 2 labeled links stay false negatives, and that is reported rather than resolved around."
+    }
+  },
+  "corroborating_signals": {
+    "rel_sponsored": {
+      "note": "Google requires rel=\"sponsored\" on affiliate links. Presence is a positive signal. ABSENCE on a link we independently confirm is affiliate is itself a finding — a compliance failure, reportable with zero inference."
+    },
+    "disclosure_text": {
+      "note": "Record presence AND position relative to the first affiliate link. FTC 16 CFR 255 requires 'clear and conspicuous'. Position is a fact, not an opinion."
+    }
+  },
+  "canada_notes": {
+    "summary": "Canadian publishers overwhelmingly run US networks with .ca merchant IDs. Same pipes, different merchant table.",
+    "merchants_to_map": [
+      "Canadian Tire",
+      "Best Buy Canada",
+      "Indigo",
+      "Sport Chek",
+      "Well.ca",
+      "Hudson's Bay",
+      "Staples Canada",
+      "Amazon.ca"
+    ],
+    "publishers_to_crawl": [
+      "MobileSyrup",
+      "BlogTO",
+      "Narcity",
+      "RedFlagDeals",
+      "Daily Hive"
+    ],
+    "regulatory_hook": "Canada's Competition Act carries deceptive marketing provisions and the Competition Bureau has published influencer/endorsement disclosure guidance. VERIFY CURRENT SPECIFICS WITH COUNSEL before making any regulatory claim in published material."
+  }
+}

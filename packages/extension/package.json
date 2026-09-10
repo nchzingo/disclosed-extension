@@ -1,0 +1,32 @@
+{
+  "name": "@disclosed/extension",
+  "version": "0.1.0",
+  "description": "Manifest V3 extension: reads the page, marks affiliate links, never touches one. Chrome, Edge and Firefox from one codebase.",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "postinstall": "wxt prepare",
+    "build": "wxt build -b chrome && wxt build -b edge && wxt build -b firefox",
+    "build:chrome": "wxt build -b chrome",
+    "build:edge": "wxt build -b edge",
+    "build:firefox": "wxt build -b firefox",
+    "verify-built": "node tools/verify-built.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build-corpus-fixture": "node tools/build-corpus-fixture.mjs",
+    "screenshots": "node tools/screenshots.mjs",
+    "package": "node tools/package.mjs"
+  },
+  "dependencies": {
+    "@disclosed/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^30.0.0",
+    "@types/node": "^26.1.1",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0",
+    "wxt": "^0.21.0"
+  }
+}

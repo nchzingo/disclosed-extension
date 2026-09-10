@@ -1,0 +1,16 @@
+{
+  "_comment": "THE ONE PLACE THE DOMAIN IS WRITTEN. Everything that names Disclosed to a third party — the crawler's User-Agent, the /bot page, the contact address, the API origin, the Firefox add-on id — is derived from these values. packages/core/src/identity.ts mirrors them for the three TypeScript packages that import core; packages/core/test/identity.test.ts asserts the mirror equals this file, so the two cannot drift. The shell deploy scripts and the web build read this file directly. test/no-retired-domain.test.ts greps every tracked file for the retired domain and fails on a hit.",
+  "_retired": {
+    "domain": "disclosed.app",
+    "retired_on": "2026-09-09",
+    "why": "Never owned. It was an Afternic/GoDaddy for-sale listing throughout, so every request this project made named a domain we could not answer on. disclosed.info was registered 2026-09-09.",
+    "note": "Records under data/ still carry disclosed.app in their user_agent and provenance fields, deliberately and permanently. Those fields state what we ACTUALLY SENT at a past moment. Rewriting them would make the record say we sent something we did not, which is the same class of act as editing a fetched_at."
+  },
+  "domain": "disclosed.info",
+  "site_origin": "https://disclosed.info",
+  "bot_page": "https://disclosed.info/bot",
+  "user_agent": "DisclosedBot/1.0 (+https://disclosed.info/bot)",
+  "contact_email": "bot@disclosed.info",
+  "api_origin": "https://api.disclosed.info",
+  "firefox_addon_id": "extension@disclosed.info"
+}

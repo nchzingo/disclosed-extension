@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Disclosed</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --ink: #16181d;
+        --muted: #5b6270;
+        --line: #d9dde5;
+        --bg: #ffffff;
+        --accent: #1a5fb4;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ink: #e9ecf2;
+          --muted: #a2aab8;
+          --line: #333844;
+          --bg: #16181d;
+        }
+      }
+      body {
+        margin: 0;
+        width: 360px;
+        font: 13px/1.45 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+      }
+      header {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      header h1 {
+        margin: 0;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      section {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      h2 {
+        margin: 0 0 8px;
+        font-size: 14px;
+      }
+      dl {
+        display: grid;
+        grid-template-columns: auto max-content;
+        gap: 2px 10px;
+        margin: 0;
+      }
+      dt {
+        color: var(--muted);
+      }
+      dd {
+        margin: 0;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      p {
+        margin: 8px 0 0;
+      }
+      p.note {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .state {
+        border-left: 3px solid var(--accent);
+        padding-left: 8px;
+      }
+      .state strong {
+        display: block;
+      }
+      .rho {
+        font-variant-numeric: tabular-nums;
+        font-size: 15px;
+        margin-top: 6px;
+      }
+      footer {
+        padding: 10px 14px;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      code {
+        font-size: 11px;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <header><h1>Disclosed</h1></header>
+    <main id="main">
+      <section><p>Reading this page…</p></section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

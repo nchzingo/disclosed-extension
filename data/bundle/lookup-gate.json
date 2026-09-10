@@ -1,0 +1,8 @@
+{
+  "note": "Build-time gate for the extension manifest. Derived from rules-latest.json; never served to a client.",
+  "bundleVersion": 7,
+  "bundleSha256": "157efba2c9e21027de2bd79c298ec775885efb7a92637555a63f23305b50339c",
+  "resolutions_truncated": false,
+  "resolutionsShipped": 1609,
+  "resolutionsTotal": 1609
+}

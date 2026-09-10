@@ -1,0 +1,14 @@
+{
+  "name": "disclosed-extension",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Browser extension that marks affiliate links on the page you are reading. Makes no network request. MIT.",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.1",
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r build && pnpm -r typecheck && pnpm -r test",
+    "verify-built": "pnpm --filter @disclosed/extension verify-built"
+  }
+}
