@@ -9,7 +9,7 @@
  * permission added by accident is a capability this extension's privacy claim
  * says it does not have.
  */
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { API_ORIGIN, FIREFOX_ADDON_ID } from '@disclosed/core';
@@ -106,5 +106,73 @@ describe('the manifest', () => {
     expect(gate.resolutions_truncated).toBe(bundle.resolutions_truncated);
     expect(gate.resolutionsShipped).toBe(bundle.resolutions.shipped);
     expect(resolutionTableTruncated()).toBe(bundle.resolutions_truncated);
+  });
+});
+
+/**
+ * EVERY FILE THE MANIFEST NAMES MUST BE IN THE PACKAGE.
+ *
+ * Added 2026-09-10, after declaring `icons` produced a build whose manifest
+ * named four PNGs that were not in it. WXT resolves `publicDir` from the project
+ * root rather than from `srcDir`, so with `srcDir: 'src'` it copied nothing —
+ * and printed no warning, and exited 0. The extension would have loaded with a
+ * broken icon and the store would have rejected the package at review.
+ *
+ * These read `.output/`, so they need a build. They SKIP loudly rather than pass
+ * when there is none: a test that reports success for having found no artifact
+ * is the shape of the bug it is here to catch.
+ */
+describe('the built package', () => {
+  const OUT = join(REPO_ROOT, 'packages', 'extension', '.output', 'chrome-mv3');
+  const built = existsSync(join(OUT, 'manifest.json'));
+  if (!built) {
+    console.warn(`no build at ${OUT} — run: pnpm --filter @disclosed/extension build`);
+  }
+
+  it.skipIf(!built)('contains every file its manifest references', () => {
+    const m = JSON.parse(readFileSync(join(OUT, 'manifest.json'), 'utf8')) as Record<string, unknown>;
+    const referenced = new Set<string>();
+    const walk = (v: unknown, key = ''): void => {
+      if (typeof v === 'string') {
+        // Anything that looks like a packaged path, not a URL or a title.
+        if (/\.(png|js|html|css|json)$/.test(v) && !/^https?:/.test(v)) referenced.add(v);
+        return;
+      }
+      if (Array.isArray(v)) return void v.forEach((x) => walk(x, key));
+      if (v && typeof v === 'object') {
+        for (const [k, val] of Object.entries(v)) walk(val, k);
+      }
+    };
+    walk(m);
+    expect(referenced.size, 'the manifest references no files at all').toBeGreaterThan(0);
+    const missing = [...referenced].filter((f) => !existsSync(join(OUT, f)));
+    expect(missing, `manifest names files that are not in the package: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it.skipIf(!built)('ships the four icon sizes the store and the toolbar need', () => {
+    const m = JSON.parse(readFileSync(join(OUT, 'manifest.json'), 'utf8')) as {
+      icons?: Record<string, string>;
+    };
+    // 128 is what the Chrome Web Store requires. Without it a submission stops
+    // at the form, which is how this gap was found.
+    expect(Object.keys(m.icons ?? {}).sort()).toEqual(['128', '16', '32', '48']);
+    for (const [size, file] of Object.entries(m.icons!)) {
+      const bytes = readFileSync(join(OUT, file));
+      expect(bytes.subarray(0, 8).toString('hex'), `${file} is not a PNG`).toBe('89504e470d0a1a0a');
+      // Dimensions out of the PNG header, not out of the filename.
+      expect(bytes.readUInt32BE(16), `${file} width`).toBe(Number(size));
+      expect(bytes.readUInt32BE(20), `${file} height`).toBe(Number(size));
+    }
+  });
+
+  it.skipIf(!built)('the store icon asset IS the manifest icon, byte for byte', () => {
+    // One file doing two jobs. If these ever diverge, the listing shows an icon
+    // the extension does not use.
+    const store = join(REPO_ROOT, 'packages', 'extension', 'store', 'images', 'icon-128.png');
+    if (!existsSync(store)) {
+      console.warn('no store/images/icon-128.png — run: node tools/store-images.mjs');
+      return;
+    }
+    expect(readFileSync(store).equals(readFileSync(join(OUT, 'icon-128.png')))).toBe(true);
   });
 });
