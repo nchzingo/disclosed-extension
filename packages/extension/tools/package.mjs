@@ -16,6 +16,14 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
 const OUT = join(root, '.output', 'packages');
 const version = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).version;
+/**
+ * `--suffix store` names the store-variant packages distinctly, so the zip that
+ * embeds no publisher measurement can never be confused with the one that does.
+ * They are the same version and differ only in what was withheld, which is
+ * exactly the pair a filename has to keep apart.
+ */
+const si = process.argv.indexOf('--suffix');
+const suffix = si >= 0 && process.argv[si + 1] ? `-${process.argv[si + 1]}` : '';
 
 mkdirSync(OUT, { recursive: true });
 let made = 0;
@@ -25,7 +33,7 @@ for (const target of ['chrome-mv3', 'edge-mv3', 'firefox-mv3']) {
     console.error(`no build at ${dir} — run: pnpm --filter @disclosed/extension build`);
     process.exit(1);
   }
-  const zip = join(OUT, `disclosed-${version}-${target}.zip`);
+  const zip = join(OUT, `disclosed-${version}-${target}${suffix}.zip`);
   // DELETE FIRST. `zip -r` UPDATES an existing archive rather than replacing it:
   // entries whose names still exist are refreshed, and entries whose names have
   // gone — a content-hashed chunk from a previous build, say — are KEPT. That is

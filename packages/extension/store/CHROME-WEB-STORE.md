@@ -17,30 +17,49 @@ set to `none`.
 
 | | |
 |---|---|
-| Upload | `packages/extension/.output/packages/disclosed-0.1.0-chrome-mv3.zip` |
-| **DO NOT UPLOAD BEFORE DAY 8** | **the embedded bundle carries all 22 publisher cards — see below** |
+| Upload | `packages/extension/.output/packages/disclosed-0.1.0-chrome-mv3-store.zip` |
+| **Publisher cards embedded** | **0** — verify with `node tools/cards-in-package.mjs <zip>` |
+| Resolution rows embedded | 0 |
 | Version | `0.1.0` |
 | Manifest | V3 |
 | Permissions requested | **none** — no `permissions`, no `host_permissions`, no `optional_permissions` |
 
-### The package embeds 22 publisher report cards. A store listing is publication.
+### The uploaded package carries NO publisher measurement, on purpose
 
-`data/bundle/rules-latest.json` is inlined into this package at build time, and
-it carries a summary card per publisher — monetization exposure, disclosure grade
-distribution, whether a correlation is published. **Uploading this zip publishes
-those measurements**, in exactly the sense SPEC §9 means, and the seven-day
-windows have not run.
+A store listing is publication in exactly the sense SPEC §9 means, and the
+seven-day right-of-reply windows have not run. So the package submitted today
+embeds a bundle with **`cards: []` and an empty resolution table** — and a
+listing that embeds no measurement is not publication at all, which is what lets
+the submission go in now and be reviewed while the clock runs.
 
-The public `disclosed-extension` repository ships the same bundle with
-`cards: []` for this reason, gated by the launch gate. **The local build is NOT
-gated that way** — it embeds the monorepo's full bundle, which is correct for
-loading unpacked and wrong for a store submission made early.
+**The cards arrive in a store UPDATE on day 8**, packaged from the same bundle
+the website publishes that morning. `docs/launch/DAY-8.md` §9 is the sequence.
 
-So: do not upload until `pnpm --filter @disclosed/crawler launch-gate` says PASS,
-and rebuild after it does so the cards in the package are the ones the website
-published on the same day.
+What the store build loses, stated rather than glossed: every site reports "no
+report card" (accurate — none has been published), and every cloaked link is
+shown as cloaked with an unknown destination rather than answered from the table.
+Both are states the extension already has and already explains. **Nothing about
+the zero-network claim weakens** — with no table to answer from, the artifact has
+every reason to ask and still asks nobody, which `verify-built` asserts directly
+when pointed at the store bundle.
 
-Rebuild and repackage with:
+Build and package with:
+
+```sh
+node packages/extension/tools/store-bundle.mjs          # cards: [] + empty table
+cd packages/extension
+DISCLOSED_STORE_BUILD=1 npx wxt build -b chrome
+DISCLOSED_STORE_BUILD=1 npx wxt build -b edge
+DISCLOSED_STORE_BUILD=1 npx wxt build -b firefox
+node tools/verify-built.mjs chrome-mv3 --bundle ../../data/bundle/rules-store.json
+node tools/cards-in-package.mjs .output/chrome-mv3      # must print 0
+node tools/package.mjs --suffix store
+```
+
+For the day-8 update, drop `DISCLOSED_STORE_BUILD` and `--suffix`, and
+`cards-in-package.mjs` must print 22.
+
+The full (non-store) build is rebuilt with:
 
 ```sh
 pnpm --filter @disclosed/crawler launch-gate        # must say PASS first

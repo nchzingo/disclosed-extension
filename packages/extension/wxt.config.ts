@@ -112,9 +112,26 @@ function apiOrigin(): string | null {
  * host permission. The failure direction is the one that removes a capability
  * rather than granting one on a file we could not read.
  */
+/**
+ * THE STORE BUILD, and the one env var that selects it.
+ *
+ * `DISCLOSED_STORE_BUILD=1` swaps the embedded bundle for
+ * `data/bundle/rules-store.json` — the same file, with the publisher cards and
+ * the resolution table removed and its sha256 recomputed (tools/store-bundle.mjs).
+ * A store listing is publication, and the seven-day windows have not run.
+ *
+ * The swap is a Vite ALIAS rather than a code branch, because the bundle is a
+ * static `import` and the point is that the store artifact contains no other
+ * bundle at all — not that it declines to read one.
+ */
+const STORE_BUILD = process.env.DISCLOSED_STORE_BUILD === '1';
+const fromHere = (rel: string): string => fileURLToPath(new URL(rel, import.meta.url));
+
 export function resolutionTableTruncated(): boolean {
   try {
-    const path = fileURLToPath(new URL('../../data/bundle/lookup-gate.json', import.meta.url));
+    const path = STORE_BUILD
+      ? fromHere('../../data/bundle/lookup-gate-store.json')
+      : fileURLToPath(new URL('../../data/bundle/lookup-gate.json', import.meta.url));
     const gate = JSON.parse(readFileSync(path, 'utf8')) as { resolutions_truncated?: unknown };
     return gate.resolutions_truncated === true;
   } catch {
@@ -143,7 +160,32 @@ export default defineConfig({
    * qualifier on it is worth more than the polyfill. Extension pages run in
    * browsers with native `modulepreload`; the preload hints themselves stay.
    */
-  vite: () => ({ build: { modulePreload: { polyfill: false } } }),
+  vite: () => ({
+    build: { modulePreload: { polyfill: false } },
+    // MATCHED AS A REGEX ON THE IMPORT SPECIFIER, not on a resolved path.
+    // Vite applies `resolve.alias` to the specifier as written, and the one in
+    // `src/lib/bundle.ts` is relative — `../../../../data/bundle/rules-latest.json`
+    // — so an absolute `find` matched nothing and the store build silently
+    // embedded the FULL bundle. It built, it was 640 kB, and it answered a real
+    // cloak; only `verify-built` reading the store bundle and finding the
+    // artifact disagreeing with it caught the swap having never happened.
+    ...(STORE_BUILD
+      ? {
+          resolve: {
+            alias: [
+              {
+                // Anchored at BOTH ends. Vite replaces only the matched
+                // portion, so a regex matching just the tail left the relative
+                // prefix in front of an absolute path and produced
+                // `../../../../Users/…/rules-store.json`.
+                find: /^.*data\/bundle\/rules-latest\.json$/,
+                replacement: fromHere('../../data/bundle/rules-store.json'),
+              },
+            ],
+          },
+        }
+      : {}),
+  }),
   manifest: ({ browser }) => {
     // `apiOrigin()` is called FIRST and unconditionally, so a malformed
     // WXT_API_BASE still fails the build loudly. Gating it behind the

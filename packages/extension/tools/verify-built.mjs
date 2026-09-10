@@ -134,8 +134,46 @@ if (JSON.stringify(before) !== JSON.stringify(after)) {
 if (markers.length === 0) failures.push('no marker was inserted — the check would be vacuous');
 if (netCalls.length !== 0) failures.push(`${netCalls.length} network call(s): ${JSON.stringify(netCalls)}`);
 if (messages.length !== 0) failures.push(`${messages.length} background message(s): ${JSON.stringify(messages)}`);
+/**
+ * WHICH EXPECTATION APPLIES IS READ OUT OF THE BUNDLE, NOT PASSED IN.
+ *
+ * The full build ships the resolution table, and the meaningful assertion there
+ * is that a real cloak WAS answered from it — otherwise "zero network calls" is
+ * the vacuous version of the claim, true only because nothing was ever asked.
+ *
+ * The STORE build ships an empty table on purpose (tools/store-bundle.mjs: a
+ * listing is publication and the seven-day windows have not run), and there the
+ * assertion INVERTS. With nothing to answer from, the artifact has every reason
+ * to reach for the network and must still reach for nothing. That is the
+ * stronger demonstration rather than a weakened one, and both cloaks must come
+ * back unresolved rather than guessed.
+ *
+ * `--bundle <path>` names the file the artifact was built from. It is READ here
+ * rather than trusted as a flag, so pointing this at the wrong bundle produces a
+ * failure instead of the wrong expectation.
+ */
+const bundleArgIndex = process.argv.indexOf('--bundle');
+const bundlePath =
+  bundleArgIndex >= 0 && process.argv[bundleArgIndex + 1]
+    ? process.argv[bundleArgIndex + 1]
+    : join(here, '..', '..', '..', 'data', 'bundle', 'rules-latest.json');
+const shippedRows = JSON.parse(readFileSync(bundlePath, 'utf8')).resolutions.entries.length;
+const emptyTable = shippedRows === 0;
+
 if (report === null) {
   failures.push('the artifact returned no page report — cannot check the resolution table');
+} else if (emptyTable) {
+  if (report.cloaksAnsweredFromBundle !== 0) {
+    failures.push(
+      'the bundle ships an EMPTY resolution table and the artifact answered ' +
+        `${report.cloaksAnsweredFromBundle} cloak(s) anyway — it is not built from ${bundlePath}`,
+    );
+  }
+  if (report.cloakedUnresolved < 2) {
+    failures.push(
+      `with an empty table BOTH cloaks must be left unresolved and ${report.cloakedUnresolved} was`,
+    );
+  }
 } else if (report.cloaksAnsweredFromBundle < 1) {
   failures.push(
     'no cloak was answered from the shipped resolution table, so "zero network calls" is ' +
@@ -150,9 +188,12 @@ console.log(`anchors byte-identical    ${JSON.stringify(before) === JSON.stringi
 console.log(`markers inserted          ${markers.length} (${markers.map((m) => m.getAttribute('data-disclosed-marker')).join(', ')})`);
 console.log(`network calls             ${netCalls.length}`);
 console.log(`background messages       ${messages.length}`);
+console.log(`resolution table          ${shippedRows} row(s)${emptyTable ? '  <- STORE BUILD: withheld on purpose' : ''}`);
 console.log(
   `cloaks answered locally   ${report === null ? 'n/a' : report.cloaksAnsweredFromBundle} ` +
-    `(from the table inside the artifact, no request)`,
+    (emptyTable
+      ? '(nothing to answer from — and it still asked nobody)'
+      : '(from the table inside the artifact, no request)'),
 );
 console.log(`cloaks left unresolved    ${report === null ? 'n/a' : report.cloakedUnresolved}`);
 
