@@ -146,6 +146,8 @@ MIT. See `packages/extension/LICENSE`.
 An unauditable privacy claim is worth nothing, which is the entire reason this
 repository exists.
 
----
-
-*Split from `ffad3019915737e7f3abd40372b4dd893094fc62`.*
+*The commit this was split from is in `SPLIT.json`, not here. It used to be
+printed in this line, which made the README — and therefore the `splitId` — change
+on **every** commit to the source repository, including commits that touched
+nothing in this one. The drift test then failed constantly for the one reason that
+is not drift, which is how a sync check gets switched off.*
