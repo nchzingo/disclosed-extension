@@ -1,5 +1,19 @@
 # Chrome Web Store listing — copy this into the form
 
+> **SUBMITTED 2026-09-10. Version 0.1.0, the zero-card package. PENDING REVIEW.**
+>
+> Google flagged **broad host access** as needing in-depth review. We submitted
+> rather than narrowing it — see "What a reviewer is most likely to ask" at the
+> foot of this file, which anticipated exactly this question, and
+> `docs/launch/DAY-8.md` §9 for the reasoning and for what to do if the item is
+> still in review on day 8.
+>
+> The uploaded package declares `permissions` null, `host_permissions` null and
+> `optional_permissions` null. The only broad thing in it is
+> `content_scripts.matches`. Do not let a form field or a note anywhere describe
+> this extension as requesting host permissions: it requests none, and that is
+> the fact the zero-network claim rests on.
+
 Everything a person has to paste into the Developer Dashboard, in the order the
 form asks for it. **Nothing here is a claim the built artifact does not already
 make**: every sentence below is either in `packages/extension/README.md` or is
@@ -373,6 +387,14 @@ pages are published on arbitrary domains, and the extension reports nothing back
 to us from any of them. The match pattern grants no data collection here: with no
 host permission and no network primitive in the content script, a page it reads
 cannot leave the browser.
+
+**"Why not `activeTab`?"** — asked in substance by the review flag on 2026-09-10.
+`activeTab` grants access only after the user invokes the extension, so nothing
+would be marked until a reader clicked the toolbar icon. The product is *see the
+affiliate links on the page you are reading*; a reader who does not know to click
+sees an unmarked page and concludes there is nothing to see. That is not merely
+worse usability — it under-reports monetization, in the direction that flatters
+publishers, which is the one direction this project must not fail in.
 
 **"The content script is 640 kB. What is in it?"** The rules bundle — network
 signatures, the rate table with provenance, the report cards, and the resolution
