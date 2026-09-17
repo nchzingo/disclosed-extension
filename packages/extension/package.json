@@ -1,6 +1,6 @@
 {
   "name": "@disclosed/extension",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Manifest V3 extension: reads the page, marks affiliate links, never touches one. Chrome, Edge and Firefox from one codebase.",
   "private": true,
   "license": "MIT",

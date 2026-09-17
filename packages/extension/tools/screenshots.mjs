@@ -196,7 +196,7 @@ async function main() {
              <img src="data:image/png;base64,${shot}"
                   style="max-height:${HEIGHT - 120}px;border:1px solid #d8d5cc;border-radius:8px;
                          box-shadow:0 8px 30px rgba(0,0,0,.10);background:#fff">
-             <p style="margin:1rem 0 0">What the extension found on the page, and the published card for the site</p>
+             <p style="margin:1rem 0 0">What the extension found on the page, and whether the bundle holds a card for the site</p>
            </div></body>`,
       );
       await frame.waitForTimeout(400);

@@ -51,7 +51,15 @@ export function cardsInPackage(target) {
     .join('\n');
   if (source.length === 0) throw new Error(`${target} contains no JavaScript at all`);
 
-  const re = /\{\\?"publisher\\?":\\?"([^"\\]+)\\?",\\?"status\\?":/g;
+  // TWO SHAPES, because Vite serialises each top-level key of an imported JSON
+  // file on its own: a key whose value is over 10 kB becomes
+  // `JSON.parse("…")` — a string, quotes escaped — and a smaller one becomes a
+  // plain object literal with UNQUOTED keys. `cards` crossed that line
+  // downward on 2026-09-17 when the seven unreached publishers' cards were
+  // withheld (22 cards → 15), and a counter that knew only the string shape
+  // printed 0 for a package carrying 15. Both shapes are matched now, and the
+  // self-validation below is against the shape of the build actually made.
+  const re = /\{\\?"?publisher\\?"?:\\?"([^"\\]+)\\?",\\?"?status\\?"?:/g;
   const publishers = new Set();
   for (const m of source.matchAll(re)) publishers.add(m[1]);
   return { cards: publishers.size, publishers: [...publishers].sort() };

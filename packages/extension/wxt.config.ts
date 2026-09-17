@@ -198,7 +198,7 @@ export default defineConfig({
       // The Chrome Web Store single-purpose statement, verbatim. It is the
       // description because the description is what a reviewer reads.
       description: 'disclose affiliate relationships on the page you are viewing',
-      version: '0.1.0',
+      version: '0.1.1',
       author: { email: CONTACT_EMAIL },
       homepage_url: SITE_ORIGIN,
       ...(browser === 'firefox'

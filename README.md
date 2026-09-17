@@ -115,17 +115,7 @@ every file, and a test in the monorepo fails if this repository's head stops
 matching. Send issues and pull requests here; changes are applied upstream and
 flow back through the split.
 
-### The publisher cards are withheld from the bundle in this copy
-
-`data/bundle/rules-latest.json` here carries `"cards": []`. The 22 cards
-summarise measurements about named publishers, and the method gives every
-publisher seven days' written notice before anything about it is published — a
-public repository being publication like any other. the launch gate refuses (17 blocker(s)): at least one publisher's seven-day right-of-reply window has not run, or nobody has recorded what came back.
-
-The bundle is otherwise identical and its `sha256` has been recomputed over the
-reduced body, so it still verifies against itself. Every site will report "no
-report card" in the popup, which is accurate: none has been published. The cards
-appear here in the same commit they appear on the website.
+**The rules bundle includes the publisher report cards** (15 of them).
 
 ### One test is not in this repository
 

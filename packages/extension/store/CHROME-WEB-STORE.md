@@ -1,5 +1,24 @@
 # Chrome Web Store listing — copy this into the form
 
+> **DAY 8, 2026-09-17 — THE UPDATE PACKAGE IS BUILT: version 0.1.1, 15 publisher
+> cards, the full resolution table, packaged from bundle v12 — the same bundle
+> `https://disclosed.info/data/` names (sha256 `978ca0135c5ce794…`).**
+>
+> | | |
+> |---|---|
+> | Upload | `packages/extension/.output/packages/disclosed-0.1.1-chrome-mv3.zip` (a copy is in `~/Desktop/cws-listing/`) |
+> | sha256 of that zip | `715472a01309b7ace37799e7c61450dd6a3d4c6a4286cf0597c8c878fef65c84` |
+> | Publisher cards embedded | **15** — `node tools/cards-in-package.mjs <zip>` |
+> | Cards withheld | **7**, the publishers we could not reach: adorama.com, robovacguide.com, safetydetectives.com, techgearlab.com, vacuumwars.com, websiteplanet.com, youtube.com — named in the bundle's own `notes` |
+> | Resolution rows embedded | 1,609 (the whole table; `resolutions_truncated: false`) |
+> | Version | `0.1.1` |
+> | `verify-built` | anchors byte-identical, 0 network calls, 0 background messages, a real cloak answered from the shipped table |
+>
+> Upload it as a NEW VERSION of the existing listing. If 0.1.0 is still in
+> review, this replaces the pending submission and restarts the clock (DAY-8 §9).
+> The listing text below is unchanged; the screenshots were retaken from this
+> build and show `0.1.1` and bundle v12.
+
 > **SUBMITTED 2026-09-10. Version 0.1.0, the zero-card package. PENDING REVIEW.**
 >
 > Google flagged **broad host access** as needing in-depth review. We submitted
@@ -71,7 +90,11 @@ node tools/package.mjs --suffix store
 ```
 
 For the day-8 update, drop `DISCLOSED_STORE_BUILD` and `--suffix`, and
-`cards-in-package.mjs` must print 22.
+`cards-in-package.mjs` must print the number of publishers the launch gate
+renders with figures — **15 on 2026-09-17**, not 22: the seven publishers we
+could not reach have no card in the bundle, and the bundle's own `notes` name
+them and say why. A popup on one of those sites says "no report card", which
+is accurate.
 
 The full (non-store) build is rebuilt with:
 
@@ -264,7 +287,7 @@ regenerate with `node packages/extension/tools/screenshots.mjs`.
 | File | Caption to paste |
 |---|---|
 | `1-marked-article.png` | A review page with the affiliate links marked. The links that pay nobody are left alone. |
-| `2-popup.png` | What the extension found on the page, and the published card for the site. |
+| `2-popup.png` | What the extension found on the page, and whether the bundle holds a card for the site. The demo page is `demo-review.invalid`, a host that cannot exist, so the panel reads "No report card" — by design: our synthetic article is never served under a real publisher's name. The footer names the bundle version and sha256. |
 | `3-manifest.png` | The shipped manifest asks for no permissions, so the browser will not let it reach the network. |
 
 **They are pictures of the running extension, not mock-ups.** The script launches
